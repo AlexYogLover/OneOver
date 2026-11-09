@@ -1,0 +1,586 @@
+<title>One Over</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Libre+Franklin:wght@400;500;600&display=swap">
+<style>
+/* Layout: a manual ground scoreboard — painted board above, one ball at a time below, the over tracker as the spine. Single deliberate dark-green look. */
+:root{
+  --board:#123a2b;      /* scoreboard green */
+  --board-deep:#0b281d;
+  --panel:#184a37;
+  --paint:#f3efe2;      /* white paint on the board */
+  --muted:#9fb8a9;
+  --leather:#c8342b;    /* cricket ball red */
+  --gold:#e8b84a;       /* boundary */
+  --line:rgba(243,239,226,.16);
+  --f-board:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--board-deep);color:var(--paint);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* Scoreboard */
+.board{background:var(--board);border:3px solid #0a2219;border-radius:6px;padding:18px 20px 16px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 30px rgba(0,0,0,.35);
+  background-image:repeating-linear-gradient(90deg,transparent 0 59px,rgba(0,0,0,.08) 59px 60px)}
+.board-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-board);font-weight:900;font-size:clamp(2.2rem,8vw,3.2rem);line-height:.9;margin:0;letter-spacing:.02em;text-transform:uppercase}
+h1 span{color:var(--gold)}
+.tag{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.slot{background:var(--board-deep);border-radius:4px;padding:8px 10px;text-align:center}
+.slot .lbl{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.slot .val{font-family:var(--f-board);font-weight:800;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.slot .val.flip{animation:flip .45s ease}
+@keyframes flip{0%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+
+/* Over tracker */
+.over{display:flex;gap:8px;justify-content:space-between;margin-top:16px}
+.ball{flex:1;aspect-ratio:1;max-width:64px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--f-board);font-weight:800;font-size:1.4rem;border:2px dashed var(--line);color:var(--muted);font-variant-numeric:tabular-nums}
+.ball.now{border:2px solid var(--paint);color:var(--paint)}
+.ball.r1,.ball.r2,.ball.r3{background:var(--paint);color:var(--board-deep);border-color:var(--paint)}
+.ball.r4{background:var(--gold);color:var(--board-deep);border-color:var(--gold)}
+.ball.r6{background:var(--gold);color:var(--board-deep);border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,184,74,.35)}
+.ball.rW{background:var(--leather);color:var(--paint);border-color:var(--leather)}
+
+/* Delivery card */
+.card{background:var(--panel);border-radius:6px;padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+.eyebrow{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.q{font-size:1.28rem;font-weight:500;line-height:1.35;margin:0;text-wrap:balance}
+.hint{font-size:.88rem;color:var(--muted);margin:0}
+form{display:flex;gap:10px;flex-wrap:wrap}
+input{flex:1 1 180px;min-width:0;font:600 1.6rem var(--f-board);letter-spacing:.04em;padding:10px 14px;border-radius:4px;
+  border:2px solid var(--line);background:var(--board-deep);color:var(--paint);font-variant-numeric:tabular-nums}
+input:focus{outline:none;border-color:var(--gold)}
+button{font:700 1rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;border-radius:4px;border:0;
+  background:var(--paint);color:var(--board-deep);cursor:pointer}
+button:hover{background:#fff}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button.ghost{background:transparent;color:var(--paint);border:2px solid var(--line)}
+.err{color:#ff9b8f;font-size:.88rem;margin:0}
+
+.result{display:flex;flex-direction:column;gap:12px}
+.verdict{display:flex;align-items:center;gap:16px}
+.big{font-family:var(--f-board);font-weight:900;font-size:4.4rem;line-height:.85;min-width:2ch}
+.big.r4,.big.r6{color:var(--gold)} .big.rW{color:var(--leather)}
+.call{font-family:var(--f-board);font-weight:800;font-size:1.6rem;text-transform:uppercase;letter-spacing:.03em;line-height:1}
+.sub{color:var(--muted);font-size:.92rem}
+.compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-variant-numeric:tabular-nums}
+.compare div{background:var(--board-deep);border-radius:4px;padding:8px 10px}
+.compare b{display:block;font-family:var(--f-board);font-size:1.4rem;font-weight:800}
+.compare span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fact{font-size:.92rem;margin:0;border-top:1px solid var(--line);padding-top:12px}
+
+/* Rubric */
+details{background:transparent;border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.rubric{margin-top:10px;font-size:.9rem;display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+.rubric b{font-family:var(--f-board);font-size:1.1rem}
+
+/* End of over */
+.final .big{font-size:5.4rem}
+.share{font-family:var(--f-board);font-size:1.5rem;letter-spacing:.12em;background:var(--board-deep);padding:10px 14px;border-radius:4px;user-select:all}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.foot{font-size:.78rem;color:var(--muted);text-align:center}
+
+/* Batting scene */
+.scene{margin:-22px -20px 0;border-radius:6px 6px 0 0;overflow:hidden;background:var(--board-deep)}
+.scene svg{display:block;width:100%;height:auto}
+.scene .bat,.scene .bail,.scene .stump,.scene .leg,.scene .arm{transform-box:fill-box}
+.scene .bat{transform-origin:50% 6%;transform:rotate(25deg)}
+.scene .stump{transform-origin:50% 100%}
+.scene .bail{transform-origin:50% 50%}
+.scene .leg,.scene .arm{transform-origin:50% 0}
+.scene .l1{transform:rotate(14deg)} .scene .l2{transform:rotate(-14deg)}
+.scene .running .l1{animation:stride .36s ease-in-out infinite alternate}
+.scene .running .l2{animation:stride .36s ease-in-out infinite alternate-reverse}
+.scene .running .arm{animation:pump .36s ease-in-out infinite alternate}
+@keyframes stride{from{transform:rotate(-32deg)}to{transform:rotate(32deg)}}
+@keyframes pump{from{transform:rotate(-40deg)}to{transform:rotate(30deg)}}
+.scene-label{font-family:var(--f-board);font-weight:900;font-size:30px;letter-spacing:.06em;fill:var(--gold);opacity:0}
+.scene-label.w{fill:var(--leather)}
+
+/* Shot clock */
+.clock{display:flex;align-items:center;gap:12px}
+.track{flex:1;height:8px;background:var(--board-deep);border-radius:4px;overflow:hidden}
+.fill{height:100%;width:100%;background:var(--gold);transform-origin:left center}
+.fill.late{background:var(--leather)}
+.secs{font-family:var(--f-board);font-weight:800;font-size:1.6rem;min-width:2.4ch;text-align:right;font-variant-numeric:tabular-nums;line-height:1}
+.secs.late{color:var(--leather)}
+.pop{animation:pop .4s ease 1.9s backwards}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+
+@media (max-width:420px){.big{font-size:3.4rem}.compare b{font-size:1.15rem}.slot .val{font-size:2rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="board" aria-label="Scoreboard">
+    <div class="board-top">
+      <h1>One <span>Over</span></h1>
+      <div class="tag" id="dayTag">Six balls · closest guess wins</div>
+    </div>
+    <div class="score-row">
+      <div class="slot"><div class="lbl">Runs</div><div class="val" id="runs">0</div></div>
+      <div class="slot"><div class="lbl">Wkts</div><div class="val" id="wkts">0</div></div>
+      <div class="slot"><div class="lbl">Overs</div><div class="val" id="overs">0.0</div></div>
+    </div>
+    <div class="over" id="tracker" aria-label="This over"></div>
+  </header>
+
+  <main class="card" id="stage" aria-live="polite"></main>
+
+  <details>
+    <summary>How runs are scored</summary>
+    <div class="rubric">
+      <b>6</b><span>Bang on, or within a hair of it</span>
+      <b>4</b><span>Very close</span>
+      <b>3</b><span>Close</span>
+      <b>2</b><span>In the right area</span>
+      <b>1</b><span>Edged it</span>
+      <b style="color:var(--leather)">W</b><span>Too far off to score, or no answer within 25 seconds. Each ball has its own tolerance, shown after you play.</span>
+    </div>
+  </details>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<!-- DAILY OVER DATA: the nightly task replaces the JSON in these two blocks only. -->
+<script type="application/json" id="over-data">
+{
+  "date": "2026-11-09",
+  "over": 1,
+  "balls": [
+    {
+      "q": "How many runs did Sachin Tendulkar score in Test cricket?",
+      "hint": "Still the all-time record.",
+      "answer": 15921,
+      "mode": "pct",
+      "bands": [
+        0.5,
+        2,
+        5,
+        10,
+        20
+      ],
+      "unit": "runs",
+      "fact": "Tendulkar finished on 15,921 Test runs (1989–2013). Joe Root passed 14,000 in June 2026 and is the only player close."
+    },
+    {
+      "q": "What is Brian Lara's highest Test score, the highest individual innings in Test history?",
+      "hint": "Made against England in Antigua, 2004.",
+      "answer": 400,
+      "mode": "abs",
+      "bands": [
+        0,
+        10,
+        25,
+        50,
+        100
+      ],
+      "unit": "runs",
+      "suffix": "*",
+      "fact": "Lara made 400 not out against England at St John's in April 2004, reclaiming the record from Matthew Hayden's 380."
+    },
+    {
+      "q": "What is the official capacity of the Melbourne Cricket Ground?",
+      "hint": "Around 95,000 seats, plus standing room.",
+      "answer": 100024,
+      "mode": "pct",
+      "bands": [
+        0.5,
+        3,
+        7,
+        12,
+        20
+      ],
+      "unit": "spectators",
+      "fact": "The MCG holds 100,024: about 95,000 seats and 5,000 standing. Only the Narendra Modi Stadium in Ahmedabad is a bigger cricket ground."
+    },
+    {
+      "q": "How many Test wickets did Muttiah Muralitharan take?",
+      "hint": "He took the last one with his final ball in Tests.",
+      "answer": 800,
+      "mode": "abs",
+      "bands": [
+        0,
+        10,
+        30,
+        60,
+        120
+      ],
+      "unit": "wickets",
+      "fact": "Muralitharan retired in 2010 on exactly 800 Test wickets, the record. Shane Warne is next on 708."
+    },
+    {
+      "q": "In which year was the first official Test match played?",
+      "hint": "Australia v England at the MCG.",
+      "answer": 1877,
+      "mode": "abs",
+      "bands": [
+        0,
+        2,
+        5,
+        10,
+        20
+      ],
+      "unit": "",
+      "year": true,
+      "fact": "The first Test was played at the MCG in March 1877. Australia won by 45 runs, the same margin as the 1977 Centenary Test."
+    },
+    {
+      "q": "What is the highest team total in a Test innings?",
+      "hint": "Sri Lanka against India in Colombo, 1997.",
+      "answer": 952,
+      "mode": "abs",
+      "bands": [
+        0,
+        15,
+        40,
+        80,
+        150
+      ],
+      "unit": "runs",
+      "suffix": "/6 dec",
+      "fact": "Sri Lanka declared on 952/6 against India in 1997. Sanath Jayasuriya made 340 and Roshan Mahanama 225."
+    }
+  ]
+}
+</script>
+<script type="application/json" id="over-archive">
+[
+ {
+  "date": "2026-11-09",
+  "q": "How many runs did Sachin Tendulkar score in Test cricket?",
+  "answer": 15921
+ },
+ {
+  "date": "2026-11-09",
+  "q": "What is Brian Lara's highest Test score, the highest individual innings in Test history?",
+  "answer": 400
+ },
+ {
+  "date": "2026-11-09",
+  "q": "What is the official capacity of the Melbourne Cricket Ground?",
+  "answer": 100024
+ },
+ {
+  "date": "2026-11-09",
+  "q": "How many Test wickets did Muttiah Muralitharan take?",
+  "answer": 800
+ },
+ {
+  "date": "2026-11-09",
+  "q": "In which year was the first official Test match played?",
+  "answer": 1877
+ },
+ {
+  "date": "2026-11-09",
+  "q": "What is the highest team total in a Test innings?",
+  "answer": 952
+ }
+]
+</script>
+<script>
+// Each ball: tolerance bands for 6/4/3/2/1. mode "abs" = units away; "pct" = percent of the answer.
+const DAY = JSON.parse(document.getElementById("over-data").textContent);
+const BALLS = DAY.balls;
+const OUTCOMES = [6,4,3,2,1];
+const CALLS = {6:"Six!",4:"Four",3:"Three runs",2:"Two",1:"A single",W:"Bowled!"};
+const SUBS = {6:"Out of the ground.",4:"Raced to the rope.",3:"Good running.",2:"Pushed into the gap.",1:"Nudged off the pads.",W:"Too far off to score."};
+const LIMIT = 25;
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let state = { i:0, results:[], phase:"ask" };
+let clockId = null;
+function stopClock(){ if(clockId){ clearInterval(clockId); clockId=null; } }
+
+// ---- Ground scene (SVG). Whole field, pitch in the middle; batter at the left end, bowler runs in from the right.
+const CREASE_X = 244, RUNUP_X = 330, FEET_Y = 118;
+let bowlerX = RUNUP_X;
+function figure(x,y,shirt,s){ // small fielder
+  return `<g transform="translate(${x},${y}) scale(${s||.5})"><rect x="-4" y="-20" width="8" height="20" rx="3" fill="${shirt||"#f3efe2"}"/><circle cx="0" cy="-25" r="5" fill="#e3c39a"/><path d="M-5 -27 Q0 -33 5 -27 Z" fill="#1e2b4a"/><ellipse cx="0" cy="1" rx="6" ry="1.6" fill="#000" opacity=".2"/></g>`;
+}
+function sceneSVG(){
+  const stripes = Array.from({length:10},(_,k)=>`<rect x="${k*40}" y="0" width="20" height="210" fill="#1d5c40" opacity=".5"/>`).join("");
+  const crowd = Array.from({length:90},(_,k)=>`<circle cx="${(k*4.1)%362}" cy="${6+((k*7)%3)*5}" r="1.6" fill="${["#c8342b","#f3efe2","#e8b84a","#4d7a9e"][k%4]}" opacity=".55"/>`).join("");
+  const fielders = [[52,86],[96,150],[176,58],[206,168],[300,74],[318,152],[150,92]].map(([x,y])=>figure(x,y)).join("");
+  return `<svg viewBox="0 0 360 210" role="img" aria-label="A cricket ground with the batter at the crease and the bowler running in">
+    <rect width="360" height="210" fill="#0d2a1f"/>
+    ${crowd}
+    <defs><clipPath id="oval"><ellipse cx="180" cy="116" rx="176" ry="90"/></clipPath></defs>
+    <g clip-path="url(#oval)"><rect width="360" height="210" fill="#1a5a3d"/>${stripes}</g>
+    <ellipse cx="180" cy="116" rx="166" ry="82" fill="none" stroke="var(--paint)" stroke-width="1.5" stroke-dasharray="4 4" opacity=".65"/>
+    <ellipse cx="180" cy="114" rx="78" ry="34" fill="none" stroke="var(--paint)" stroke-width=".8" stroke-dasharray="2 4" opacity=".3"/>
+    <rect x="352" y="96" width="6" height="28" fill="#e9e6da" opacity=".85"/><rect x="2" y="96" width="6" height="28" fill="#e9e6da" opacity=".85"/>
+    <!-- pitch -->
+    <rect x="104" y="106" width="152" height="18" rx="2" fill="#bba872"/>
+    <line x1="122" y1="106" x2="122" y2="124" stroke="var(--paint)" stroke-width="1"/>
+    <line x1="238" y1="106" x2="238" y2="124" stroke="var(--paint)" stroke-width="1"/>
+    <g fill="#e9dcc0"><rect x="246" y="104" width="1.2" height="12"/><rect x="248" y="104" width="1.2" height="12"/><rect x="250" y="104" width="1.2" height="12"/></g>
+    ${fielders}
+    ${figure(100,118,"#f3efe2",.55)}
+    <!-- batter end, drawn at 0.6 scale -->
+    <g transform="translate(70,44) scale(.6)">
+      <g fill="#efe3c4">
+        <rect class="stump" x="58" y="92" width="2.6" height="28"/><rect class="stump" x="62.5" y="92" width="2.6" height="28"/><rect class="stump" x="67" y="92" width="2.6" height="28"/>
+        <rect class="bail b1" x="57.5" y="89.5" width="6.5" height="2"/><rect class="bail b2" x="63.5" y="89.5" width="6.5" height="2"/>
+      </g>
+      <ellipse cx="86" cy="124" rx="14" ry="3" fill="#000" opacity=".2"/>
+      <rect x="77" y="98" width="7" height="24" rx="3" fill="#f6f2e6"/>
+      <rect x="86" y="98" width="7" height="24" rx="3" fill="#f6f2e6"/>
+      <rect x="75" y="120" width="10" height="4" rx="2" fill="#2b2b2b"/>
+      <rect x="85" y="120" width="10" height="4" rx="2" fill="#2b2b2b"/>
+      <path d="M77 100 L79 74 Q86 70 93 74 L94 100 Z" fill="#f6f2e6"/>
+      <path d="M90 78 L97 88 M82 78 L95 89" stroke="#f6f2e6" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="86" cy="64" r="8" fill="#1e2b4a"/>
+      <rect x="86" y="60" width="9" height="8" rx="1" fill="none" stroke="#c9c9c9" stroke-width="1.2"/>
+      <path d="M78 62 Q86 52 95 61" fill="#1e2b4a"/>
+      <g class="bat">
+        <rect x="94.5" y="86" width="3" height="10" rx="1" fill="#3a2a1a"/>
+        <rect x="92.6" y="95" width="6.8" height="26" rx="2.5" fill="#d9b77a"/>
+      </g>
+      <circle cx="96" cy="88" r="3.2" fill="#e8c9a0"/>
+    </g>
+    <!-- bowler, facing left; feet at the group origin -->
+    <g class="bowler" transform="translate(${bowlerX},${FEET_Y}) scale(.6)">
+      <ellipse cx="0" cy="1" rx="9" ry="2.4" fill="#000" opacity=".2"/>
+      <g class="leg l1"><rect x="-2.5" y="-24" width="5" height="24" rx="2.5" fill="#f6f2e6"/></g>
+      <g class="leg l2"><rect x="-2.5" y="-24" width="5" height="24" rx="2.5" fill="#e4dfcf"/></g>
+      <path d="M-6 -22 L-5 -46 Q1 -50 7 -46 L6 -22 Z" fill="#f6f2e6"/>
+      <g class="arm"><rect x="-1.8" y="-45" width="3.6" height="20" rx="1.8" fill="#f6f2e6"/><circle cx="0" cy="-25" r="2.4" fill="var(--leather)"/></g>
+      <circle cx="1" cy="-53" r="6.5" fill="#e3c39a"/>
+      <path d="M-6 -55 Q1 -63 8 -55 L11 -54 L-6 -54 Z" fill="#1e2b4a"/>
+    </g>
+    <circle class="ball" cx="${CREASE_X}" cy="94" r="2.6" fill="var(--leather)" opacity="0"/>
+    <text class="scene-label" x="180" y="64" text-anchor="middle"></text>
+  </svg>`;
+}
+function placeBowler(x){
+  bowlerX = x;
+  const g=document.querySelector(".scene .bowler");
+  if(g) g.setAttribute("transform",`translate(${x},${FEET_Y}) scale(.6)`);
+}
+function setRunning(on){ const g=document.querySelector(".scene .bowler"); if(g) g.classList.toggle("running",on); }
+
+const CONTACT=[128,108], STUMPS=[108,104];
+const HIT = { // [control, end] after contact
+  6:[[230,-70],[330,-30]], 4:[[230,150],[322,150]], 3:[[215,168],[272,172]],
+  2:[[180,152],[214,160]], 1:[[150,134],[160,142]]
+};
+function bez(p0,p1,p2,t){ const u=1-t; return [u*u*p0[0]+2*u*t*p1[0]+t*t*p2[0], u*u*p0[1]+2*u*t*p1[1]+t*t*p2[1]]; }
+function tween(ms, fn, done){
+  const t0=performance.now();
+  const tick=now=>{ const t=Math.min(1,(now-t0)/ms); fn(t); if(t<1) requestAnimationFrame(tick); else done&&done(); };
+  requestAnimationFrame(tick);
+}
+function flyBall(ball, segs, done){
+  let k=0;
+  const step=()=>{
+    if(k>=segs.length) return done&&done();
+    const [p0,p1,p2,ms]=segs[k];
+    tween(ms, t=>{ const [x,y]=bez(p0,p1,p2,t); ball.setAttribute("cx",x); ball.setAttribute("cy",y); }, ()=>{k++;step();});
+  };
+  step();
+}
+function playScene(out, timedOut, animate){
+  const svg=document.querySelector(".scene svg"); if(!svg) return;
+  const bat=svg.querySelector(".bat"), ball=svg.querySelector(".ball"), label=svg.querySelector(".scene-label");
+  const arm=svg.querySelector(".arm");
+  const words={6:"SIX!",4:"FOUR!",3:"3 RUNS",2:"2 RUNS",1:"1 RUN",W:timedOut?"TIMED OUT":"BOWLED!"};
+  label.textContent=words[out]; if(out==="W") label.classList.add("w");
+  svg.setAttribute("aria-label", out==="W" ? "The ball hits the stumps" : "The batter hits the ball for "+words[out].toLowerCase());
+  const B1="translate(-18px,-30px) rotate(-200deg)", B2="translate(-6px,-38px) rotate(160deg)";
+  const showLabel=()=>label.animate([{opacity:0,transform:"translateY(6px)"},{opacity:1,transform:"none"}],{duration:300,fill:"forwards"});
+  if(REDUCED || !animate){
+    placeBowler(CREASE_X); setRunning(false); label.style.opacity=1;
+    if(out==="W"){ svg.querySelector(".b1").style.transform=B1; svg.querySelector(".b2").style.transform=B2; }
+    return;
+  }
+  const breakStumps=()=>{
+    svg.querySelector(".b1").animate([{transform:"none"},{transform:B1,opacity:.9}],{duration:600,easing:"cubic-bezier(.2,.7,.4,1)",fill:"forwards"});
+    svg.querySelector(".b2").animate([{transform:"none"},{transform:B2,opacity:.9}],{duration:650,easing:"cubic-bezier(.2,.7,.4,1)",fill:"forwards"});
+    svg.querySelectorAll(".stump").forEach((s,n)=>s.animate([{transform:"none"},{transform:`rotate(${-6-n*4}deg)`}],{duration:300,fill:"forwards"}));
+    showLabel();
+  };
+  const swingEnd = out===6 ? "rotate(-160deg)" : out===4 ? "rotate(-110deg)" : "rotate(-75deg)";
+  const deliver=()=>{
+    setRunning(false);
+    arm.animate([{transform:"rotate(0deg)"},{transform:"rotate(-360deg)"}],{duration:300,easing:"ease-in"});
+    setTimeout(()=>{
+      ball.setAttribute("opacity",1);
+      bat.animate([
+        {transform:"rotate(25deg)",offset:0},{transform:"rotate(150deg)",offset:.55},
+        {transform:out==="W"?"rotate(-40deg)":swingEnd,offset:.8},{transform:out==="W"?"rotate(-40deg)":swingEnd,offset:1}
+      ],{duration:820,easing:"ease-in-out",fill:"forwards"});
+      const segs=[[[CREASE_X,92],[200,78],[165,122],360]];
+      if(out==="W"){ segs.push([[165,122],[130,112],STUMPS,240]); flyBall(ball,segs,breakStumps); }
+      else {
+        segs.push([[165,122],[140,114],CONTACT,190]);
+        const [c,e]=HIT[out];
+        segs.push([CONTACT,c,e, out===6?900:700]);
+        flyBall(ball,segs,showLabel);
+      }
+    },260);
+  };
+  // Finish the run-up quickly from wherever the bowler is.
+  const from=bowlerX, dist=from-CREASE_X;
+  if(dist<=1){ placeBowler(CREASE_X); deliver(); return; }
+  setRunning(true);
+  tween(Math.max(200, dist*5), t=>placeBowler(from-dist*t), deliver);
+}
+
+function fmt(n){ return Number.isInteger(n) ? n.toLocaleString("en-GB") : n.toLocaleString("en-GB",{maximumFractionDigits:1}); }
+function score(ball, guess){
+  const diff = Math.abs(guess - ball.answer);
+  const d = ball.mode === "pct" ? diff / ball.answer * 100 : diff;
+  for (let k=0;k<5;k++) if (d <= ball.bands[k]) return OUTCOMES[k];
+  return "W";
+}
+function bandText(ball){
+  const s = ball.mode==="pct" ? ball.bands.map(b=>"±"+b+"%") : ball.bands.map(b=> b===0 ? "exact" : "±"+fmt(b));
+  return `6 ${s[0]} · 4 ${s[1]} · 3 ${s[2]} · 2 ${s[3]} · 1 ${s[4]}`;
+}
+function totals(){
+  let r=0,w=0; state.results.forEach(x=>{ if(x.out==="W") w++; else r+=x.out; });
+  return {r,w};
+}
+function setVal(id,v){ const el=document.getElementById(id); if(el.textContent!==String(v)){ el.textContent=v; el.classList.remove("flip"); void el.offsetWidth; el.classList.add("flip"); } }
+
+function renderBoard(){
+  const {r,w} = totals();
+  setVal("runs", r); setVal("wkts", w);
+  setVal("overs", state.results.length===6 ? "1.0" : "0."+state.results.length);
+  const t = document.getElementById("tracker"); t.innerHTML="";
+  for(let k=0;k<6;k++){
+    const d=document.createElement("div"); d.className="ball";
+    const res=state.results[k];
+    if(res){ d.textContent=res.out; d.classList.add("r"+res.out); }
+    else if(k===state.i && state.phase!=="done"){ d.classList.add("now"); d.textContent=k+1; }
+    else d.textContent="";
+    t.appendChild(d);
+  }
+}
+
+function renderAsk(){
+  const b = BALLS[state.i];
+  document.getElementById("stage").innerHTML = `
+    <div class="scene">${sceneSVG()}</div>
+    <div class="eyebrow">Ball ${state.i+1} of 6</div>
+    <p class="q">${b.q}</p>
+    <p class="hint">${b.hint}</p>
+    <div class="clock" aria-label="Time left">
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="secs" id="secs" aria-live="off">${LIMIT}</div>
+    </div>
+    <form id="f" novalidate>
+      <input id="guess" inputmode="decimal" autocomplete="off" placeholder="Your guess${b.unit? " ("+b.unit+")":""}" aria-label="Your guess">
+      <button type="submit">Play shot</button>
+    </form>
+    <p class="err" id="err" hidden></p>`;
+  const inp = document.getElementById("guess"); inp.focus({preventScroll:true});
+  const finish = res => { stopClock(); state.results.push(res); state.phase="reveal"; renderBoard(); renderReveal(true); };
+  placeBowler(RUNUP_X); setRunning(true);
+  stopClock();
+  const deadline = performance.now() + LIMIT*1000;
+  const fill=document.getElementById("fill"), secs=document.getElementById("secs");
+  clockId = setInterval(()=>{
+    const left = Math.max(0,(deadline-performance.now())/1000);
+    fill.style.transform = `scaleX(${left/LIMIT})`;
+    secs.textContent = Math.ceil(left);
+    placeBowler(CREASE_X + (RUNUP_X-CREASE_X)*(left/LIMIT));
+    const late = left<=5; fill.classList.toggle("late",late); secs.classList.toggle("late",late);
+    if(left<=0) finish({guess:null,out:"W",timeout:true});
+  },100);
+  document.getElementById("f").addEventListener("submit", e=>{
+    e.preventDefault();
+    const raw = inp.value.replace(/[,\s]/g,"");
+    const g = Number(raw);
+    if(raw==="" || !isFinite(g)){ const er=document.getElementById("err"); er.textContent="Enter a number, for example 1500."; er.hidden=false; return; }
+    finish({guess:g,out:score(b,g)});
+  });
+}
+
+function renderReveal(animate){
+  const b = BALLS[state.i], res = state.results[state.i];
+  const t = !!res.timeout;
+  const off = t ? null : Math.abs(res.guess-b.answer);
+  const offTxt = t ? "—" : off===0 ? "0" : b.mode==="pct" ? (off/b.answer*100).toFixed(1)+"%" : fmt(off);
+  const last = state.i===5;
+  const live = animate ? document.querySelector(".scene") : null;
+  document.getElementById("stage").innerHTML = `
+    <div class="scene">${sceneSVG()}</div>
+    <div class="eyebrow">Ball ${state.i+1} of 6</div>
+    <div class="result">
+      <div class="verdict ${animate&&!REDUCED?"pop":""}">
+        <div class="big r${res.out}">${res.out}</div>
+        <div><div class="call">${t?"Timed out":CALLS[res.out]}</div><div class="sub">${t?"No answer within 25 seconds.":SUBS[res.out]}</div></div>
+      </div>
+      <div class="compare">
+        <div><span>Answer</span><b>${b.year? b.answer : fmt(b.answer)}${b.suffix||""}</b></div>
+        <div><span>You said</span><b>${t?"—":b.year? res.guess : fmt(res.guess)}</b></div>
+        <div><span>Off by</span><b>${offTxt}</b></div>
+      </div>
+      <p class="sub" style="margin:0">Tolerance: ${bandText(b)}</p>
+      <p class="fact">${b.fact}</p>
+      <div class="row"><button id="next">${last? "End of over" : "Next ball"}</button></div>
+    </div>`;
+  const n=document.getElementById("next"); n.focus({preventScroll:true});
+  n.addEventListener("click", ()=>{
+    if(last){ state.phase="done"; renderBoard(); renderFinal(); }
+    else { state.i++; state.phase="ask"; renderBoard(); renderAsk(); }
+  });
+  if(live) document.querySelector("#stage .scene").replaceWith(live);
+  playScene(res.out, t, animate);
+}
+
+function renderFinal(){
+  const {r,w} = totals();
+  const line = state.results.map(x=>x.out===1?"1":String(x.out)).join(" ");
+  const verdict = w===0 && r>=24 ? "A maximum-pressure masterclass." :
+                  r>=18 ? "Expensive over for the bowler." :
+                  r>=10 ? "Solid over, scoreboard ticking." :
+                  w>=3  ? "Hat-trick territory. Back to the nets." : "Tight bowling. Dig in next time.";
+  const shareText = `One Over #${DAY.over} · ${r}/${w}\n${line}`;
+  document.getElementById("stage").innerHTML = `
+    <div class="eyebrow">End of the over</div>
+    <div class="result final">
+      <div class="verdict">
+        <div class="big">${r}/${w}</div>
+        <div><div class="call">${r} runs, ${w} wkt${w===1?"":"s"}</div><div class="sub">${verdict}</div></div>
+      </div>
+      <div class="share" id="share">${line}</div>
+      <div class="row">
+        <button id="copy">Copy result</button>
+        <button class="ghost" id="again">Bowl it again</button>
+      </div>
+      <p class="sub" id="copied" hidden style="margin:0"></p>
+    </div>`;
+  document.getElementById("copy").addEventListener("click", ()=>{
+    const msg=document.getElementById("copied");
+    const ok=()=>{msg.textContent="Copied to clipboard."; msg.hidden=false;};
+    const fail=()=>{ const s=window.getSelection(),rg=document.createRange(); rg.selectNodeContents(document.getElementById("share")); s.removeAllRanges(); s.addRange(rg); msg.textContent="Selected. Copy it with your keyboard or long-press."; msg.hidden=false; };
+    try{ navigator.clipboard.writeText(shareText).then(ok,fail); }catch(e){ fail(); }
+  });
+  document.getElementById("again").addEventListener("click", ()=>{
+    state={i:0,results:[],phase:"ask"}; renderBoard(); renderAsk();
+  });
+}
+
+const dayLabel = new Date(DAY.date+"T12:00:00Z").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+document.getElementById("dayTag").textContent = "Over "+DAY.over+" · "+dayLabel;
+document.getElementById("foot").textContent = "A new over every day at midnight (UK). Facts checked "+dayLabel+".";
+function start(data){
+  if(data && data.state && data.date!==DAY.date) data=null;
+  if(data && data.state) state = data.state;
+  renderBoard();
+  if(state.phase==="ask") renderAsk(); else if(state.phase==="reveal") renderReveal(); else renderFinal();
+}
+window.claude?.hot?.snapshot?.(()=>({state,date:DAY.date}));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>

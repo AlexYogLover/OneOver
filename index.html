@@ -85,6 +85,13 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
 /* End of over */
 .final .big{font-size:5.4rem}
 .share{font-family:var(--f-board);font-size:1.5rem;letter-spacing:.12em;background:var(--board-deep);padding:10px 14px;border-radius:4px;user-select:all}
+/* Scorebook share style: blue ink on ruled paper, wicket in red */
+.share.book{background:#f6f1df;color:#1f3a6b;letter-spacing:.06em;white-space:nowrap;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1.5rem;line-height:1.3;padding-left:20px;
+  background-image:repeating-linear-gradient(0deg,transparent 0 21px,rgba(31,58,107,.14) 21px 22px),linear-gradient(90deg,transparent 0 10px,rgba(200,52,43,.35) 10px 11px,transparent 11px)}
+.share.book .w{color:var(--leather)}
+.styles{display:flex;gap:6px}
+.styles button{padding:7px 14px;font-size:.8rem;background:transparent;color:var(--muted);border:2px solid var(--line)}
+.styles button[aria-pressed="true"]{background:var(--paint);color:var(--board-deep);border-color:var(--paint)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .foot{font-size:.78rem;color:var(--muted);text-align:center}
 
@@ -571,6 +578,10 @@ function renderReveal(animate){
   playScene(res.out, t, animate);
 }
 
+// Scorebook glyphs for the shared result: runs ringed, wicket as a ringed W.
+const BOOK = {6:"⑥",4:"④",3:"③",2:"②",1:"①",W:"Ⓦ"};
+let shareStyle = "plain";
+try{ if(localStorage.getItem("oneover-share-style")==="book") shareStyle="book"; }catch(e){}
 function renderFinal(){
   const {r,w} = totals();
   const line = state.results.map(x=>x.out===1?"1":String(x.out)).join(" ");
@@ -578,7 +589,9 @@ function renderFinal(){
                   r>=18 ? "Expensive over for the bowler." :
                   r>=10 ? "Solid over, scoreboard ticking." :
                   w>=3  ? "Hat-trick territory. Back to the nets." : "Tight bowling. Dig in next time.";
-  const shareText = `One Over #${DAY.over} · ${r}/${w}\n${line}`;
+  const book = state.results.map(x=>BOOK[x.out]);
+  const bookHTML = state.results.map(x=>`<span class="${x.out==="W"?"w":""}">${BOOK[x.out]}</span>`).join(" ");
+  const shareText = () => `One Over #${DAY.over} · ${r}/${w}\n${shareStyle==="book" ? book.join(" ") : line}`;
   document.getElementById("stage").innerHTML = `
     <div class="eyebrow">End of the over</div>
     <div class="result final">
@@ -586,18 +599,37 @@ function renderFinal(){
         <div class="big">${r}/${w}</div>
         <div><div class="call">${r} runs, ${w} wkt${w===1?"":"s"}</div><div class="sub">${verdict}</div></div>
       </div>
-      <div class="share" id="share">${line}</div>
+      <div class="styles" role="group" aria-label="Share style">
+        <button type="button" data-style="plain">Numbers</button>
+        <button type="button" data-style="book">Scorebook</button>
+      </div>
+      <div class="share" id="share"></div>
       <div class="row">
         <button id="copy">Copy result</button>
         <button class="ghost" id="again">Bowl it again</button>
       </div>
       <p class="sub" id="copied" hidden style="margin:0"></p>
     </div>`;
+  const shareEl=document.getElementById("share");
+  const paint=()=>{
+    const isBook = shareStyle==="book";
+    shareEl.classList.toggle("book", isBook);
+    shareEl.innerHTML = isBook ? bookHTML : line;
+    shareEl.setAttribute("aria-label", isBook ? "Scorebook: "+state.results.map(x=>x.out==="W"?"wicket":x.out).join(", ") : line);
+    document.querySelectorAll(".styles button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.style===shareStyle)));
+    document.getElementById("copied").hidden=true;
+  };
+  document.querySelectorAll(".styles button").forEach(b=>b.addEventListener("click", ()=>{
+    shareStyle=b.dataset.style;
+    try{ localStorage.setItem("oneover-share-style", shareStyle); }catch(e){}
+    paint();
+  }));
+  paint();
   document.getElementById("copy").addEventListener("click", ()=>{
     const msg=document.getElementById("copied");
     const ok=()=>{msg.textContent="Copied to clipboard."; msg.hidden=false;};
-    const fail=()=>{ const s=window.getSelection(),rg=document.createRange(); rg.selectNodeContents(document.getElementById("share")); s.removeAllRanges(); s.addRange(rg); msg.textContent="Selected. Copy it with your keyboard or long-press."; msg.hidden=false; };
-    try{ navigator.clipboard.writeText(shareText).then(ok,fail); }catch(e){ fail(); }
+    const fail=()=>{ const s=window.getSelection(),rg=document.createRange(); rg.selectNodeContents(shareEl); s.removeAllRanges(); s.addRange(rg); msg.textContent="Selected. Copy it with your keyboard or long-press."; msg.hidden=false; };
+    try{ navigator.clipboard.writeText(shareText()).then(ok,fail); }catch(e){ fail(); }
   });
   document.getElementById("again").addEventListener("click", ()=>{
     state={i:0,results:[],phase:"ask"}; renderBoard(); renderAsk();

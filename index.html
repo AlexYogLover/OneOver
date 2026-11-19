@@ -153,28 +153,43 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
 <!-- DAILY OVER DATA: the nightly task replaces the JSON in these two blocks only. -->
 <script type="application/json" id="over-data">
 {
-  "date": "2026-11-18",
-  "over": 4,
+  "date": "2026-11-19",
+  "over": 5,
   "balls": [
     {
-      "q": "How many Test wickets did Shane Warne take in his career?",
-      "hint": "He was the first bowler to pass 700, at the MCG on Boxing Day 2006.",
-      "answer": 708,
+      "q": "How many balls did Yuvraj Singh take to reach his fifty against England at Durban in the 2007 World Twenty20, the innings in which he hit Stuart Broad for six sixes in an over?",
+      "hint": "It was the fastest fifty in men's T20Is for 16 years.",
+      "answer": 12,
       "mode": "abs",
       "bands": [
         0,
-        10,
-        30,
-        60,
-        120
+        1,
+        3,
+        6,
+        12
       ],
-      "unit": "wickets",
-      "fact": "Warne took 708 wickets in 145 Tests between 1992 and 2007 at an average of 25.41. Muttiah Muralitharan overtook his record later in 2007."
+      "unit": "balls",
+      "fact": "Yuvraj's six sixes came in the 19th over and carried him to fifty in 12 balls on his way to 58 off 16. The record stood until Nepal's Dipendra Singh Airee reached fifty in nine balls against Mongolia in 2023."
     },
     {
-      "q": "Chaminda Vaas took 8 wickets against Zimbabwe at Colombo in 2001, still the best bowling figures in men's ODIs. How many runs did he concede?",
-      "hint": "Zimbabwe were bowled out for 38 and Vaas sent down eight overs, three of them maidens.",
-      "answer": 19,
+      "q": "Mithali Raj retired in 2022 as the leading run-scorer in women's ODIs. How many ODI runs did she score?",
+      "hint": "She played 232 ODIs over 23 years and averaged just over 50.",
+      "answer": 7805,
+      "mode": "pct",
+      "bands": [
+        0.5,
+        2,
+        5,
+        10,
+        20
+      ],
+      "unit": "runs",
+      "fact": "Mithali Raj made 7,805 ODI runs between 1999 and 2022 at an average of 50.68, with seven hundreds and 64 fifties. She finished more than 1,800 runs clear of Charlotte Edwards in second place."
+    },
+    {
+      "q": "In which year did India win the men's Cricket World Cup for the first time?",
+      "hint": "Kapil Dev's side beat the two-time champions West Indies in the final at Lord's.",
+      "answer": 1983,
       "mode": "abs",
       "bands": [
         0,
@@ -183,198 +198,210 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
         10,
         20
       ],
-      "unit": "runs",
-      "fact": "Vaas returned 8 for 19 at the SSC in December 2001, and Sri Lanka knocked off the runs in 26 balls. He is still the only bowler to take eight wickets in a men's ODI innings."
+      "unit": "",
+      "year": true,
+      "fact": "India defended just 183 in the 1983 final and bowled West Indies out for 140 to win by 43 runs. Mohinder Amarnath was player of the match with 26 runs and three wickets."
     },
     {
-      "q": "What total did England make against the Netherlands at Amstelveen in June 2022, setting a new record for the highest team score in men's ODIs?",
-      "hint": "Buttler, Malan and Salt all made hundreds, and they fell just short of a landmark.",
-      "answer": 498,
+      "q": "Hanif Mohammad's 337 against West Indies at Bridgetown in 1958 is the longest innings in Test history by time. For how many minutes did he bat?",
+      "hint": "He batted across more than three days to save the match after Pakistan followed on.",
+      "answer": 970,
+      "mode": "pct",
+      "bands": [
+        0.5,
+        2,
+        5,
+        10,
+        20
+      ],
+      "unit": "minutes",
+      "fact": "Hanif batted for 970 minutes as Pakistan reached 657 for 8 after following on 473 behind, and the Test was drawn. Older records gave 999 minutes before a rain break was taken off the total."
+    },
+    {
+      "q": "Anil Kumble took all ten Pakistan wickets in an innings at Delhi in 1999. How many runs did he concede?",
+      "hint": "He bowled 26.3 overs, nine of them maidens, as India won by 212 runs.",
+      "answer": 74,
       "mode": "abs",
       "bands": [
         0,
+        3,
+        8,
+        15,
+        30
+      ],
+      "unit": "runs",
+      "fact": "Kumble's 10 for 74 at the Feroz Shah Kotla made him only the second bowler, after Jim Laker in 1956, to take all ten in a Test innings. Ajaz Patel later became the third, in 2021."
+    },
+    {
+      "q": "Alastair Cook holds the record for the most consecutive Test matches played. How many Tests in a row did he play for England?",
+      "hint": "The run lasted from 2006 to his final Test at The Oval in 2018, and he passed Allan Border's 153.",
+      "answer": 159,
+      "mode": "abs",
+      "bands": [
+        0,
+        4,
         10,
         25,
-        50,
-        100
+        50
       ],
-      "unit": "runs",
-      "suffix": "/4",
-      "fact": "England made 498 for 4, beating their own record of 481 for 6 against Australia in 2018, and hit 26 sixes along the way. Jos Buttler made 162 not out off 70 balls."
-    },
-    {
-      "q": "In which year did England win the men's Cricket World Cup for the first time?",
-      "hint": "The final at Lord's was tied, then the Super Over was tied too.",
-      "answer": 2019,
-      "mode": "abs",
-      "bands": [
-        0,
-        2,
-        5,
-        10,
-        20
-      ],
-      "unit": "",
-      "year": true,
-      "fact": "England beat New Zealand on boundary count at Lord's on 14 July 2019 after both the match and the Super Over finished level. They had lost the finals of 1979, 1987 and 1992."
-    },
-    {
-      "q": "What did Belinda Clark score against Denmark at the 1997 Women's World Cup in Mumbai, the first double century in any ODI?",
-      "hint": "She came 13 years before Sachin Tendulkar's 200.",
-      "answer": 229,
-      "mode": "abs",
-      "bands": [
-        0,
-        8,
-        20,
-        40,
-        80
-      ],
-      "unit": "runs",
-      "suffix": "*",
-      "fact": "The Australia captain made 229 not out off 155 balls as Australia piled up 412 for 3 and won by 363 runs. It stayed the women's ODI record until Amelia Kerr's 232 not out in 2018."
-    },
-    {
-      "q": "In which year was the first women's Test match played, Australia against England at Brisbane?",
-      "hint": "England won by nine wickets in a match that began just after Christmas.",
-      "answer": 1934,
-      "mode": "abs",
-      "bands": [
-        0,
-        2,
-        5,
-        10,
-        20
-      ],
-      "unit": "",
-      "year": true,
-      "fact": "The first women's Test began at the Exhibition Ground in Brisbane on 28 December 1934, and England went on to win the three-match series. Myrtle Maclagan was the star of the match with bat and ball."
+      "unit": "Tests",
+      "fact": "Cook played 159 consecutive Tests between May 2006 and September 2018, missing only one Test in his whole career, through illness in India in 2006. He finished with 161 Tests in all."
     }
   ]
 }
 </script>
 <script type="application/json" id="over-archive">
 [
- {
-  "date": "2026-11-09",
-  "q": "How many runs did Sachin Tendulkar score in Test cricket?",
-  "answer": 15921
- },
- {
-  "date": "2026-11-09",
-  "q": "What is Brian Lara's highest Test score, the highest individual innings in Test history?",
-  "answer": 400
- },
- {
-  "date": "2026-11-09",
-  "q": "What is the official capacity of the Melbourne Cricket Ground?",
-  "answer": 100024
- },
- {
-  "date": "2026-11-09",
-  "q": "How many Test wickets did Muttiah Muralitharan take?",
-  "answer": 800
- },
- {
-  "date": "2026-11-09",
-  "q": "In which year was the first official Test match played?",
-  "answer": 1877
- },
- {
-  "date": "2026-11-09",
-  "q": "What is the highest team total in a Test innings?",
-  "answer": 952
- },
- {
-  "date": "2026-11-16",
-  "q": "What did Rohit Sharma score against Sri Lanka at Eden Gardens in 2014, the highest individual innings in men's ODI history?",
-  "answer": 264
- },
- {
-  "date": "2026-11-16",
-  "q": "In which year did the current Lord's ground in St John's Wood stage its first match?",
-  "answer": 1814
- },
- {
-  "date": "2026-11-16",
-  "q": "How many runs did Ben Stokes make in England's second innings at Headingley in the 2019 Ashes?",
-  "answer": 135
- },
- {
-  "date": "2026-11-16",
-  "q": "What is Amelia Kerr's score against Ireland in 2018, the highest individual innings in women's ODIs?",
-  "answer": 232
- },
- {
-  "date": "2026-11-16",
-  "q": "In which year was the first Women's Cricket World Cup held?",
-  "answer": 1973
- },
- {
-  "date": "2026-11-16",
-  "q": "How many runs did Chris Gayle score for Royal Challengers Bangalore against Pune Warriors in 2013, the highest score in IPL history?",
-  "answer": 175
- },
- {
-  "date": "2026-11-17",
-  "q": "How many wickets did Jim Laker take in the 1956 Old Trafford Test against Australia, still the most by any bowler in a single Test?",
-  "answer": 19
- },
- {
-  "date": "2026-11-17",
-  "q": "What is Kiran Baluch's score against West Indies at Karachi in 2004, the highest individual innings in women's Test cricket?",
-  "answer": 242
- },
- {
-  "date": "2026-11-17",
-  "q": "What was Don Bradman's career Test batting average?",
-  "answer": 99.94
- },
- {
-  "date": "2026-11-17",
-  "q": "How many runs did Graham Gooch score in total across both innings of the 1990 Lord's Test against India, the most by any batter in a single Test?",
-  "answer": 456
- },
- {
-  "date": "2026-11-17",
-  "q": "In which year was the first men's Twenty20 International played, New Zealand against Australia at Eden Park?",
-  "answer": 2005
- },
- {
-  "date": "2026-11-17",
-  "q": "How many balls did AB de Villiers need to reach his hundred against West Indies at Johannesburg in 2015, the fastest century in men's ODIs?",
-  "answer": 31
- },
- {
-  "date": "2026-11-18",
-  "q": "How many Test wickets did Shane Warne take in his career?",
-  "answer": 708
- },
- {
-  "date": "2026-11-18",
-  "q": "Chaminda Vaas took 8 wickets against Zimbabwe at Colombo in 2001, still the best bowling figures in men's ODIs. How many runs did he concede?",
-  "answer": 19
- },
- {
-  "date": "2026-11-18",
-  "q": "What total did England make against the Netherlands at Amstelveen in June 2022, setting a new record for the highest team score in men's ODIs?",
-  "answer": 498
- },
- {
-  "date": "2026-11-18",
-  "q": "In which year did England win the men's Cricket World Cup for the first time?",
-  "answer": 2019
- },
- {
-  "date": "2026-11-18",
-  "q": "What did Belinda Clark score against Denmark at the 1997 Women's World Cup in Mumbai, the first double century in any ODI?",
-  "answer": 229
- },
- {
-  "date": "2026-11-18",
-  "q": "In which year was the first women's Test match played, Australia against England at Brisbane?",
-  "answer": 1934
- }
+  {
+    "date": "2026-11-09",
+    "q": "How many runs did Sachin Tendulkar score in Test cricket?",
+    "answer": 15921
+  },
+  {
+    "date": "2026-11-09",
+    "q": "What is Brian Lara's highest Test score, the highest individual innings in Test history?",
+    "answer": 400
+  },
+  {
+    "date": "2026-11-09",
+    "q": "What is the official capacity of the Melbourne Cricket Ground?",
+    "answer": 100024
+  },
+  {
+    "date": "2026-11-09",
+    "q": "How many Test wickets did Muttiah Muralitharan take?",
+    "answer": 800
+  },
+  {
+    "date": "2026-11-09",
+    "q": "In which year was the first official Test match played?",
+    "answer": 1877
+  },
+  {
+    "date": "2026-11-09",
+    "q": "What is the highest team total in a Test innings?",
+    "answer": 952
+  },
+  {
+    "date": "2026-11-16",
+    "q": "What did Rohit Sharma score against Sri Lanka at Eden Gardens in 2014, the highest individual innings in men's ODI history?",
+    "answer": 264
+  },
+  {
+    "date": "2026-11-16",
+    "q": "In which year did the current Lord's ground in St John's Wood stage its first match?",
+    "answer": 1814
+  },
+  {
+    "date": "2026-11-16",
+    "q": "How many runs did Ben Stokes make in England's second innings at Headingley in the 2019 Ashes?",
+    "answer": 135
+  },
+  {
+    "date": "2026-11-16",
+    "q": "What is Amelia Kerr's score against Ireland in 2018, the highest individual innings in women's ODIs?",
+    "answer": 232
+  },
+  {
+    "date": "2026-11-16",
+    "q": "In which year was the first Women's Cricket World Cup held?",
+    "answer": 1973
+  },
+  {
+    "date": "2026-11-16",
+    "q": "How many runs did Chris Gayle score for Royal Challengers Bangalore against Pune Warriors in 2013, the highest score in IPL history?",
+    "answer": 175
+  },
+  {
+    "date": "2026-11-17",
+    "q": "How many wickets did Jim Laker take in the 1956 Old Trafford Test against Australia, still the most by any bowler in a single Test?",
+    "answer": 19
+  },
+  {
+    "date": "2026-11-17",
+    "q": "What is Kiran Baluch's score against West Indies at Karachi in 2004, the highest individual innings in women's Test cricket?",
+    "answer": 242
+  },
+  {
+    "date": "2026-11-17",
+    "q": "What was Don Bradman's career Test batting average?",
+    "answer": 99.94
+  },
+  {
+    "date": "2026-11-17",
+    "q": "How many runs did Graham Gooch score in total across both innings of the 1990 Lord's Test against India, the most by any batter in a single Test?",
+    "answer": 456
+  },
+  {
+    "date": "2026-11-17",
+    "q": "In which year was the first men's Twenty20 International played, New Zealand against Australia at Eden Park?",
+    "answer": 2005
+  },
+  {
+    "date": "2026-11-17",
+    "q": "How many balls did AB de Villiers need to reach his hundred against West Indies at Johannesburg in 2015, the fastest century in men's ODIs?",
+    "answer": 31
+  },
+  {
+    "date": "2026-11-18",
+    "q": "How many Test wickets did Shane Warne take in his career?",
+    "answer": 708
+  },
+  {
+    "date": "2026-11-18",
+    "q": "Chaminda Vaas took 8 wickets against Zimbabwe at Colombo in 2001, still the best bowling figures in men's ODIs. How many runs did he concede?",
+    "answer": 19
+  },
+  {
+    "date": "2026-11-18",
+    "q": "What total did England make against the Netherlands at Amstelveen in June 2022, setting a new record for the highest team score in men's ODIs?",
+    "answer": 498
+  },
+  {
+    "date": "2026-11-18",
+    "q": "In which year did England win the men's Cricket World Cup for the first time?",
+    "answer": 2019
+  },
+  {
+    "date": "2026-11-18",
+    "q": "What did Belinda Clark score against Denmark at the 1997 Women's World Cup in Mumbai, the first double century in any ODI?",
+    "answer": 229
+  },
+  {
+    "date": "2026-11-18",
+    "q": "In which year was the first women's Test match played, Australia against England at Brisbane?",
+    "answer": 1934
+  },
+  {
+    "date": "2026-11-19",
+    "q": "How many balls did Yuvraj Singh take to reach his fifty against England at Durban in the 2007 World Twenty20, the innings in which he hit Stuart Broad for six sixes in an over?",
+    "answer": 12
+  },
+  {
+    "date": "2026-11-19",
+    "q": "Mithali Raj retired in 2022 as the leading run-scorer in women's ODIs. How many ODI runs did she score?",
+    "answer": 7805
+  },
+  {
+    "date": "2026-11-19",
+    "q": "In which year did India win the men's Cricket World Cup for the first time?",
+    "answer": 1983
+  },
+  {
+    "date": "2026-11-19",
+    "q": "Hanif Mohammad's 337 against West Indies at Bridgetown in 1958 is the longest innings in Test history by time. For how many minutes did he bat?",
+    "answer": 970
+  },
+  {
+    "date": "2026-11-19",
+    "q": "Anil Kumble took all ten Pakistan wickets in an innings at Delhi in 1999. How many runs did he concede?",
+    "answer": 74
+  },
+  {
+    "date": "2026-11-19",
+    "q": "Alastair Cook holds the record for the most consecutive Test matches played. How many Tests in a row did he play for England?",
+    "answer": 159
+  }
 ]
 </script>
 <script>

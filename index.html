@@ -153,13 +153,58 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
 <!-- DAILY OVER DATA: the nightly task replaces the JSON in these two blocks only. -->
 <script type="application/json" id="over-data">
 {
-  "date": "2026-11-20",
-  "over": 6,
+  "date": "2026-11-21",
+  "over": 7,
   "balls": [
     {
-      "q": "In which year was the first season of the Indian Premier League played?",
-      "hint": "Shane Warne captained the first champions, Rajasthan Royals.",
-      "answer": 2008,
+      "q": "How long, in yards, is a cricket pitch under the Laws of Cricket?",
+      "hint": "It is the same as one chain, an old surveyor's measure.",
+      "answer": 22,
+      "mode": "abs",
+      "bands": [
+        0,
+        1,
+        2,
+        4,
+        8
+      ],
+      "unit": "yards",
+      "fact": "Law 6 defines the pitch as a rectangle 22 yards (20.12 m) long and 10 feet wide. The 22-yard length is one chain, a unit used in English land measurement since the 1600s."
+    },
+    {
+      "q": "Australia's women set the record for the longest winning streak in ODI cricket, men's or women's, between 2018 and 2021. How many consecutive ODIs did they win?",
+      "hint": "It beat the men's record of 21 set by Ricky Ponting's Australia side in 2003.",
+      "answer": 26,
+      "mode": "abs",
+      "bands": [
+        0,
+        1,
+        3,
+        6,
+        12
+      ],
+      "unit": "wins",
+      "fact": "Australia won 26 ODIs in a row from March 2018 until India chased down 265 to beat them by two wickets at Mackay in September 2021. It remains the longest winning run in ODI history."
+    },
+    {
+      "q": "Wilfred Rhodes of Yorkshire and England holds the record for the most wickets in first-class cricket. How many first-class wickets did he take?",
+      "hint": "His career ran from 1898 to 1930 and spanned more than 1,100 first-class matches.",
+      "answer": 4204,
+      "mode": "pct",
+      "bands": [
+        0.5,
+        2,
+        5,
+        10,
+        20
+      ],
+      "unit": "wickets",
+      "fact": "Rhodes took 4,204 first-class wickets at an average of about 16.7, a record widely regarded as unbreakable. He also scored nearly 40,000 runs and played his last Test at the age of 52."
+    },
+    {
+      "q": "In which year did England lose to Australia at The Oval, prompting the Sporting Times mock obituary that gave the Ashes their name?",
+      "hint": "England, needing just 85 to win, lost by seven runs.",
+      "answer": 1882,
       "mode": "abs",
       "bands": [
         0,
@@ -170,12 +215,28 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
       ],
       "unit": "",
       "year": true,
-      "fact": "The inaugural IPL ran from 18 April to 1 June 2008. Rajasthan Royals, widely tipped to finish last, beat Chennai Super Kings off the final ball of the final in Mumbai."
+      "fact": "Australia's seven-run win at The Oval in August 1882 led the Sporting Times to announce the death of English cricket, with the body to be cremated and the ashes taken to Australia. Ivo Bligh's tour that winter set out to regain them."
     },
     {
-      "q": "Muttiah Muralitharan holds the record for the most wickets in men's ODIs. How many ODI wickets did he take?",
-      "hint": "He passed Wasim Akram's 502 in 2009 and played his last ODI in the 2011 World Cup final.",
-      "answer": 534,
+      "q": "What total did Zimbabwe make against Gambia in Nairobi in October 2024, setting the record for the highest team score in men's T20Is?",
+      "hint": "Sikandar Raza hit a 33-ball hundred, and the innings included a record 27 sixes.",
+      "answer": 344,
+      "mode": "abs",
+      "bands": [
+        0,
+        8,
+        20,
+        40,
+        80
+      ],
+      "unit": "runs",
+      "suffix": "/4",
+      "fact": "Zimbabwe made 344 for 4 in a T20 World Cup Africa qualifier, beating Nepal's 314 for 3 against Mongolia from 2023. Gambia were then bowled out for 54, a 290-run defeat."
+    },
+    {
+      "q": "Brian Lara holds the record for the highest individual score in first-class cricket, for Warwickshire against Durham at Edgbaston in 1994. What did he score?",
+      "hint": "He passed the previous record, Hanif Mohammad's 499 for Karachi.",
+      "answer": 501,
       "mode": "abs",
       "bands": [
         0,
@@ -184,69 +245,9 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
         60,
         120
       ],
-      "unit": "wickets",
-      "fact": "Murali took 534 wickets in 350 ODIs between 1993 and 2011. Together with his 800 Test wickets, he holds the records in both formats."
-    },
-    {
-      "q": "Sydney Barnes set the record for the most wickets in a single Test series on England's 1913-14 tour of South Africa. How many wickets did he take?",
-      "hint": "He played only four of the five Tests, then never played Test cricket again.",
-      "answer": 49,
-      "mode": "abs",
-      "bands": [
-        0,
-        2,
-        5,
-        10,
-        20
-      ],
-      "unit": "wickets",
-      "fact": "Barnes took 49 wickets in four Tests in South Africa in 1913-14, a series record that still stands more than a century later. He sat out the fifth Test and the First World War ended his Test career."
-    },
-    {
-      "q": "In which year was the first men's One Day International played, Australia against England at the MCG?",
-      "hint": "It was arranged at short notice after rain washed out the third Ashes Test of that tour.",
-      "answer": 1971,
-      "mode": "abs",
-      "bands": [
-        0,
-        2,
-        5,
-        10,
-        20
-      ],
-      "unit": "",
-      "year": true,
-      "fact": "The first ODI was played on 5 January 1971 on what would have been the fifth day of the abandoned Melbourne Test. It was 40 eight-ball overs a side, and Australia won by five wickets."
-    },
-    {
-      "q": "Jhulan Goswami retired in 2022 as the leading wicket-taker in women's ODIs. How many ODI wickets did she take?",
-      "hint": "She played 204 ODIs over two decades, finishing with a farewell match at Lord's.",
-      "answer": 255,
-      "mode": "abs",
-      "bands": [
-        0,
-        8,
-        25,
-        50,
-        100
-      ],
-      "unit": "wickets",
-      "fact": "Goswami took 255 wickets in 204 ODIs for India between 2002 and 2022, the most in women's ODI history. Her final international was against England at Lord's in September 2022."
-    },
-    {
-      "q": "New Zealand hold the record for the lowest total in Test cricket, against England at Auckland in 1955. What did they score?",
-      "hint": "Only one batter, Bert Sutcliffe, reached double figures.",
-      "answer": 26,
-      "mode": "abs",
-      "bands": [
-        0,
-        2,
-        5,
-        10,
-        20
-      ],
       "unit": "runs",
-      "fact": "New Zealand were bowled out for 26 in their second innings at Eden Park on 28 March 1955, with Bob Appleyard taking 4 for 7. It remains the lowest Test total, ahead of South Africa's two scores of 30."
+      "suffix": "*",
+      "fact": "Lara made 501 not out off 427 balls with 62 fours and 10 sixes, only seven weeks after his Test record 375 in Antigua. He scored 390 of those runs on the final day."
     }
   ]
 }
@@ -432,6 +433,36 @@ summary{cursor:pointer;font-size:.8rem;letter-spacing:.14em;text-transform:upper
     "date": "2026-11-20",
     "q": "New Zealand hold the record for the lowest total in Test cricket, against England at Auckland in 1955. What did they score?",
     "answer": 26
+  },
+  {
+    "date": "2026-11-21",
+    "q": "How long, in yards, is a cricket pitch under the Laws of Cricket?",
+    "answer": 22
+  },
+  {
+    "date": "2026-11-21",
+    "q": "Australia's women set the record for the longest winning streak in ODI cricket, men's or women's, between 2018 and 2021. How many consecutive ODIs did they win?",
+    "answer": 26
+  },
+  {
+    "date": "2026-11-21",
+    "q": "Wilfred Rhodes of Yorkshire and England holds the record for the most wickets in first-class cricket. How many first-class wickets did he take?",
+    "answer": 4204
+  },
+  {
+    "date": "2026-11-21",
+    "q": "In which year did England lose to Australia at The Oval, prompting the Sporting Times mock obituary that gave the Ashes their name?",
+    "answer": 1882
+  },
+  {
+    "date": "2026-11-21",
+    "q": "What total did Zimbabwe make against Gambia in Nairobi in October 2024, setting the record for the highest team score in men's T20Is?",
+    "answer": 344
+  },
+  {
+    "date": "2026-11-21",
+    "q": "Brian Lara holds the record for the highest individual score in first-class cricket, for Warwickshire against Durham at Edgbaston in 1994. What did he score?",
+    "answer": 501
   }
 ]
 </script>
